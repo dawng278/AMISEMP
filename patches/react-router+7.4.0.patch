@@ -1,0 +1,53 @@
+diff --git a/node_modules/react-router/dist/development/chunk-GNGMS2XR.mjs b/node_modules/react-router/dist/development/chunk-GNGMS2XR.mjs
+index 340c694..9039056 100644
+--- a/node_modules/react-router/dist/development/chunk-GNGMS2XR.mjs
++++ b/node_modules/react-router/dist/development/chunk-GNGMS2XR.mjs
+@@ -5668,11 +5668,8 @@ async function loadRouteModule(route, routeModulesCache) {
+     return routeModulesCache[route.id];
+   }
+   try {
+-    let routeModule = await import(
+-      /* @vite-ignore */
+-      /* webpackIgnore: true */
+-      route.module
+-    );
++    // Thay thế import bằng require
++    let routeModule = require(route.module);
+     routeModulesCache[route.id] = routeModule;
+     return routeModule;
+   } catch (error) {
+@@ -5680,13 +5677,15 @@ async function loadRouteModule(route, routeModulesCache) {
+       `Error loading route module \`${route.module}\`, reloading page...`
+     );
+     console.error(error);
+-    if (window.__reactRouterContext && window.__reactRouterContext.isSpaMode && // @ts-expect-error
+-    import.meta.hot) {
++    if (
++      window.__reactRouterContext &&
++      window.__reactRouterContext.isSpaMode &&
++      import.meta.hot // @ts-expect-error
++    ) {
+       throw error;
+     }
+     window.location.reload();
+-    return new Promise(() => {
+-    });
++    return new Promise(() => {});
+   }
+ }
+ 
+@@ -6586,11 +6585,9 @@ function createClientRoutes(manifest, routeModulesCache, initialState, ssr, isSp
+       return fetchServerHandler(singleFetch);
+     }
+     function prefetchModule(modulePath) {
+-      import(
+-        /* @vite-ignore */
+-        /* webpackIgnore: true */
+-        modulePath
+-      );
++      // Thay thế dòng lỗi bằng:
++Promise.resolve(require(modulePath))
++
+     }
+     function prefetchRouteModuleChunks(route2) {
+       if (route2.clientActionModule) {
